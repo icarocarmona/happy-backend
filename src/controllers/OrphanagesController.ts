@@ -6,17 +6,17 @@ import * as Yup from 'yup'
 
 export default {
   async index(req: Request, res: Response) {
-    const orphanagesRepositoy = getRepository(Orphanage)
+    const orphanagesRepository = getRepository(Orphanage)
 
-    const orphanages = await orphanagesRepositoy.find({ relations: ['images'] })
+    const orphanages = await orphanagesRepository.find({ relations: ['images'] })
 
     return res.json(orphanageView.renderMany(orphanages))
   },
   async show(req: Request, res: Response) {
     const { id } = req.params
-    const orphanagesRepositoy = getRepository(Orphanage)
+    const orphanagesRepository = getRepository(Orphanage)
 
-    const orphanage = await orphanagesRepositoy.findOneOrFail(id, {
+    const orphanage = await orphanagesRepository.findOneOrFail(id, {
       relations: ['images'],
     })
 
@@ -33,7 +33,7 @@ export default {
       open_on_weekends,
     } = req.body
 
-    const orphanagesRepositoy = getRepository(Orphanage)
+    const orphanagesRepository = getRepository(Orphanage)
 
     const reqImages = req.files as Express.Multer.File[]
     const images = reqImages.map((image) => {
@@ -69,9 +69,9 @@ export default {
     await schema.validate(data, {
       abortEarly: false,
     })
-    const orphanage = orphanagesRepositoy.create(data)
+    const orphanage = orphanagesRepository.create(data)
 
-    await orphanagesRepositoy.save(orphanage)
+    await orphanagesRepository.save(orphanage)
 
     return res.status(201).json(orphanage)
   },
